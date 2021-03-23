@@ -107,7 +107,7 @@ Restart Home assistant and the new sensor will be available as the entity "speed
 
 The new sensor entity `speedport_plus_status` will have the values "online" or "offline". The DSL line metrics (attenuation, snr, sync speed etc.) will be available as attributes of this entity. 
 
-You may use the sensor status (online/offline) in automations (for instance restart your router with a smart plug when disconnected) as well as the numberic attributes (using trigger `numeric_state` and selecting an attribute).
+You may use the sensor status (online/offline) in automations (for instance, restart your router with a smart plug when disconnected). You may also use the numeric attributes using trigger `numeric_state` and selecting an attribute from the list.
 
 Monitoring your Internet connection long term may be more practical with a tool such as Grafana. Read the related section below.
 
