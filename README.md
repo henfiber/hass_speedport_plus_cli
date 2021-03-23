@@ -2,12 +2,14 @@ Convert Sercomm Speedport Plus (VDSL2 modem) status information in a format whic
 
 ## Exported statistics
 
+| Attribute | Description |
+| -----| ----- |
 | vdsl_atnd | Downstream Attenuation (dB) |
 | vdsl_atnu | Upstream Attenuation (dB) |
 | dsl_crc_errors | CRC errors (total since last DSL sync) |
 | dsl_fec_errors | FEC errors (total since last DSL sync) |
 | dsl_snrd | Downstream SNR (dB) |
-| dsl_snru | Upstream SNR (dB |
+| dsl_snru | Upstream SNR (dB) |
 | dsl_downstream | Downstream DSL throughput (Kbps) |
 | dsl_upstream | Upstream DSL throughput (Kbps) | 
 | dsl_max_downstream | Max attainable downstream DSL throughput (Kbps) |
@@ -70,7 +72,7 @@ sensor:
 
 **Configure the router IP**
 
-If the IP of your router is not `192.168.1.1` or if you want to use a hostname, then supply the http base url 
+If the IP of your router is not `192.168.1.1` or if you want to use a hostname, then change `command:` above with the correct http base url 
 (including `http://` but without a trailing slash `/`) as the first argument (quoted). For instance if the IP of your router is `10.0.50.1` change the configuration above as follows:
 
 ```
@@ -95,7 +97,7 @@ can do this by changing the `value_template` field as:
       value_template: '{{ value_json.dsl_online_status }}'
 ```
 
-(we changed `dsl_link_status` to `dsl_online_status`)
+(`dsl_link_status` was changed to `dsl_online_status`)
 
 
 
