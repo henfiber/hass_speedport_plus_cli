@@ -1,0 +1,75 @@
+scratchpad/
+tmp/
+
+
+# Ignore temporary files (linux editor files and others)
+*.tmp
+*~
+*.log
+*.DS_Store
+*.bak
+*.pid
+*supervisord*.sock
+*service*.lock
+
+
+### Python
+venv/
+.venv
+.idea
+*.pid
+*.py[cod]
+__pycache__/
+*$py.class
+instance/
+.pytest_cache/
+.Python
+dist/
+build/
+*.egg-info/
+.installed.cfg
+*.egg
+develop-eggs/
+eggs/
+.eggs/
+downloads/
+lib/
+lib64/
+parts/
+sdist/
+var/
+
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+
+# Django
+*.log
+
+# Sphinx documentation
+docs/_build/
+
+# PyBuilder
+target/
+
+#Ipython Notebook
+.ipynb_checkpoints
+
+# PyCharm and VirtualEnv
+.idea
