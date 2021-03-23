@@ -44,7 +44,7 @@ All 3 addons are recommended for productive use and management of Home assistant
 
 After you have successfully added the script under `scripts_cli/speedport_plus.py`, you may edit `configuration.yaml` and create a sensor of platform: [command_line](https://www.home-assistant.io/integrations/sensor.command_line/):
 
-```
+```yaml
 sensor:
     - platform: command_line
       name: Speedport Plus status
@@ -75,7 +75,7 @@ sensor:
 If the IP of your router is not `192.168.1.1` or if you want to use a hostname, then change `command:` above with the correct http base url 
 (including `http://` but without a trailing slash `/`) as the first argument (quoted). For instance if the IP of your router is `10.0.50.1` change the configuration above as follows:
 
-```
+```yaml
       command: 'python3 /config/scripts_cli/speedport_plus.py "http://10.0.50.1"'
 ```
 
@@ -93,7 +93,7 @@ The configuration suggested above will use the DSL synchronization status as the
 want to change it to indicate full IP connectivity instead (i.e. you have an active PPPoE session). You
 can do this by changing the `value_template` field as:
 
-```
+```yaml
       value_template: '{{ value_json.dsl_online_status }}'
 ```
 
@@ -121,7 +121,7 @@ InfluxDB and Grafana are available as Home assistant (community) addons. Check t
 
 As an example, in Grafana if you want to plot the downstream SNR, you have to choose in the Visual editor:
 
-```
+```SQL
 FROM default state WHERE entity_id = speedport_plus_status
 SELECT field(dsl_snrd) last()
 GROUP BY time($__interval) tag(entity_id) fill(none)
@@ -129,7 +129,7 @@ GROUP BY time($__interval) tag(entity_id) fill(none)
 
 In text query mode, this is:
 
-```
+```SQL
 SELECT last("dsl_snrd") FROM "state" WHERE ("entity_id" = 'speedport_plus_status') AND $timeFilter GROUP BY time($__interval) fill(none)
 ```
 
@@ -137,7 +137,7 @@ SELECT last("dsl_snrd") FROM "state" WHERE ("entity_id" = 'speedport_plus_status
 
 This assumes that you use `state` as the [default measurement](https://www.home-assistant.io/integrations/influxdb/#configuration-variables) name when a metric is "unitless". i.e. in `configuration.yaml` you have:
 
-```
+```yaml
 influxdb:
     ...
     default_measurement: state
@@ -166,7 +166,7 @@ This will output traffic statistics from your home network. It's not very consis
 
 The ping integration is usually used for presence detection. But you may also use it to check your Internet latency.
 
-```
+```yaml
 binary_sensor:
   - platform: ping
     host: hostname-or-ip-address-to-ping
@@ -206,14 +206,14 @@ You may test the script from your PC (if you have python3 installed) or from the
 
 Run without arguments to retrieve data from the default url <http://192.168.1.1/data/Status.json>:
 
-```
+```sh
 python3 speedport_plus.py
 ```  
 
 If the IP of your router is not `192.168.1.1` or if you want to use a hostname, then supply the http base url 
 (including "http://" but without a trailing slash) as the first argument (quoted). For example:
 
-```
+```sh
 python3 speedport_plus.py "http://10.0.50.1"
 ```
 
