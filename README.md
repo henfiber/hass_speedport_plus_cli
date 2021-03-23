@@ -35,9 +35,9 @@ If you are new to Home assistant, consider the following ways to do that:
 
 - If you have installed the "Samba share" addon, you may download the script first in your computer and then create the folder and copy-paste the file by accessing the "/config" share.
 - If you have installed the "Terminal & SSH addon", you may `mkdir config/scripts_cli && cd config/scripts_cli` and download the script using `wget` and the **raw** github path to the script. You may also use `git` and clone this repo there.
-- If you have installed the "File editor" addon, you may manually create the folder from the menu (top left folder icon) and then create a new file, name it `speedport_cli.py` and copy-paste the contents from this repo.
+- If you have installed the "File editor" addon, you may manually create the folder from the menu (top left folder icon) and then create a new file, name it `speedport_plus.py` and copy-paste the contents from this repo.
 
-All 3 addons are recommended for productive use and management of Home assistant, so you may try all suggestions above.
+All 3 addons are recommended for productive use and management of Home assistant, so you may try any of the suggestions above.
 
 
 **2. Configure the new sensor in configuration.yaml**
