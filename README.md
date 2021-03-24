@@ -111,7 +111,29 @@ The new sensor entity `speedport_plus_status` will have the values "online" or "
 
 You may use the sensor status (online/offline) in automations (for instance, restart your router with a smart plug when disconnected). You may also use the numeric attributes using trigger `numeric_state` and selecting an attribute from the list.
 
-Monitoring your Internet connection long term may be more practical with a tool such as Grafana. Read the related section below.
+Monitoring your Internet connection long term may be more practical with a tool such as Grafana. A sample dashboard is included in this repo. Read the following section for more.
+
+
+## Attributes as individual sensors
+
+If you want to make some of the DSL attributes available as individual sensors (useful for UI widgets), you may accomplish this with template sensors:
+
+```yaml
+sensor:
+    - platform: template
+      sensors:
+          dsl_sync_downstream:
+              friendly_name: DSL Sync downstream
+              value_template: >-
+                  {{state_attr("sensor.speedport_plus_status", "dsl_downstream") | float | multiply(0.001) | round(2) }}
+              unit_of_measurement: "Mbit/s"
+          dsl_sync_upstream:
+              friendly_name: DSL Sync upstream
+              value_template: >-
+                  {{state_attr("sensor.speedport_plus_status", "dsl_upstream") | float | multiply(0.001) | round(2) }}
+              unit_of_measurement: "Mbit/s"
+```
+
 
 
 ## InfluxDB / Grafana usage
@@ -123,13 +145,21 @@ attributes (DSL speed, snr, attenuation etc.) will be also available as seperate
 
 InfluxDB and Grafana are available as Home assistant (community) addons. Check the Add-on Store under the Supervisor section.
 
-As an example, in Grafana if you want to plot the downstream SNR, you have to choose in the Visual editor:
+The dashboard displayed here is available in this repo under the `Grafana` folder. You may import it into your Grafana instance choosing your InfluxDB data source.
+
+
+**Sample queries**
+
+In Grafana, if you want to plot the downstream SNR, then you have to choose in the **Visual editor**:
 
 ```SQL
 FROM default state WHERE entity_id = speedport_plus_status
 SELECT field(dsl_snrd) last()
 GROUP BY time($__interval) tag(entity_id) fill(none)
 ```
+
+(this is not an actual InfluxDB query, just the way Grafana UI editor displays the query parts)
+
 
 In text query mode, this is:
 
@@ -152,9 +182,13 @@ If it's not the case, then you should adjust the queries above accordingly.
 
 
 
-**Rate instead of total stats**
+**Rates instead of total stats**
 
-You may compute rates (e.g. errors per minute) instead of totals using InfluxDB transformation functions such as: `non_negative_difference()` and `non_negative_derivative()` 
+You may compute rates (e.g. errors per minute) instead of totals using InfluxDB transformation functions such as: `non_negative_difference()` and `non_negative_derivative()`.  
+
+Alternatively, you may use the Home assistant [derivative](https://www.home-assistant.io/integrations/derivative/) platform (but you need to export 
+the attributes as individual sensors, as described previously).
+
 
 
 ## Related helpful integrations
@@ -206,7 +240,7 @@ Alternatively you may use the [Iperf3](https://www.home-assistant.io/integration
 
 ## Test from the command-line
 
-You may test the script from your PC (if you have python3 installed) or from the Home assistant command line.
+You may test the script from your PC (if you have python3 installed).
 
 Run without arguments to retrieve data from the default url <http://192.168.1.1/data/Status.json>:
 
