@@ -1,5 +1,7 @@
 Convert Sercomm Speedport Plus (VDSL2 modem) status information in a format which can be parsed by the Home assistant `command_line` sensor platform.
 
+![HASS Speedport plus status - Screenshot](screenshots/hass_speedport_plus_status-and-attributes.png)
+
 ## Exported statistics
 
 | Attribute | Description |
