@@ -115,7 +115,9 @@ Monitoring your Internet connection long term may be more practical with a tool 
 
 
 ## InfluxDB / Grafana usage
-    
+
+![Speedport plus Grafana Dashboard - Screenshot](screenshots/hass_grafana_speedport-plus_dashboard.png)
+
 If you have integrated Home assistant with [InfluxDB](https://www.home-assistant.io/integrations/influxdb/), the
 attributes (DSL speed, snr, attenuation etc.) will be also available as seperate "fields" in the default "state" measurement.
 
