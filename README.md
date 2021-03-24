@@ -1,11 +1,12 @@
-Convert Sercomm Speedport Plus (VDSL2 modem) status information in a format which can be parsed by the Home assistant `command_line` sensor platform.
+Integrate Sercomm Speedport Plus (VDSL2 modem) with Home assistant using the `command_line` sensor platform.
 
-![HASS Speedport plus status - Screenshot](screenshots/hass_speedport_plus_status-and-attributes.png)
+![HASS Speedport plus dashboard - Screenshot](screenshots/hass_speedport-plus_dashboard.png)
 
-## Exported statistics
+
+**Exported statistics**
 
 | Attribute | Description |
-| -----| ----- |
+| ----------| ----------- |
 | vdsl_atnd | Downstream Attenuation (dB) |
 | vdsl_atnu | Upstream Attenuation (dB) |
 | dsl_crc_errors | CRC errors (total since last DSL sync) |
@@ -26,8 +27,6 @@ Convert Sercomm Speedport Plus (VDSL2 modem) status information in a format whic
 
 
 ## Usage within Home Assistant
-
-For now the installation is manual but it is quite simple for anyone familiar with Home assistant.
 
 
 **1. Download the speedport_plus.py script** 
@@ -109,6 +108,8 @@ Restart Home assistant and the new sensor will be available as the entity "speed
 
 The new sensor entity `speedport_plus_status` will have the values "online" or "offline". The DSL line metrics (attenuation, snr, sync speed etc.) will be available as attributes of this entity. 
 
+![HASS Speedport plus status - Screenshot](screenshots/hass_speedport_plus_status-and-attributes.png)
+
 You may use the sensor status (online/offline) in automations (for instance, restart your router with a smart plug when disconnected). You may also use the numeric attributes using trigger `numeric_state` and selecting an attribute from the list.
 
 Monitoring your Internet connection long term may be more practical with a tool such as Grafana. A sample dashboard is included in this repo. Read the following section for more.
@@ -132,6 +133,37 @@ sensor:
               value_template: >-
                   {{state_attr("sensor.speedport_plus_status", "dsl_upstream") | float | multiply(0.001) | round(2) }}
               unit_of_measurement: "Mbit/s"
+          dsl_errors_crc:
+              friendly_name: DSL CRC Errors
+              value_template: >-
+                  {{state_attr("sensor.speedport_plus_status", "dsl_crc_errors") }}
+          dsl_errors_fec:
+              friendly_name: DSL FEC Errors
+              value_template: >-
+                  {{state_attr("sensor.speedport_plus_status", "dsl_fec_errors") }}
+```
+
+You may also want to compute error rates which are more useful than totals for detecting spikes during the day. We can use the 
+Home assistant [derivative](https://www.home-assistant.io/integrations/derivative/) platform to accomplish that. 
+
+(Make sure you have added the invidual sensors as suggested above first)
+
+```
+sensor:
+    - platform: derivative
+      source: sensor.dsl_errors_crc
+      name: DSL Error rate (CRC)
+      round: 0
+      unit_time: h
+      unit: "Err/h"
+      time_window: "00:05:00"  # we look at the change over the last 5 minutes
+    - platform: derivative
+      source: sensor.dsl_errors_fec
+      name: DSL Error rate (FEC)
+      round: 0
+      unit_time: h
+      unit: "Err/h"      
+      time_window: "00:05:00"  # we look at the change over the last 5 minutes
 ```
 
 
@@ -185,9 +217,7 @@ If it's not the case, then you should adjust the queries above accordingly.
 **Rates instead of total stats**
 
 You may compute rates (e.g. errors per minute) instead of totals using InfluxDB transformation functions such as: `non_negative_difference()` and `non_negative_derivative()`.  
-
-Alternatively, you may use the Home assistant [derivative](https://www.home-assistant.io/integrations/derivative/) platform (but you need to export 
-the attributes as individual sensors, as described previously).
+Or just use the Home assistant [derivative](https://www.home-assistant.io/integrations/derivative/) platform as described in the previous section.
 
 
 
