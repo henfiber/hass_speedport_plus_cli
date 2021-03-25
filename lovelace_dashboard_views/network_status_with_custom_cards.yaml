@@ -1,0 +1,285 @@
+  - icon: 'hass:network'
+    path: network
+    title: Network
+    visible:
+      - user: PUT_HERE_YOUR_USER_ID1
+      - user: PUT_HERE_YOUR_USER_ID2
+    layout: {}
+    type: 'custom:horizontal-layout'
+    badges: []
+    cards:
+      - type: grid
+        cards:
+          - type: 'custom:mini-graph-card'
+            name: Sync down (Mbps)
+            entities:
+              - entity: sensor.dsl_sync_downstream
+            icon: 'mdi:download'
+            color_thresholds:
+              - value: 0
+                color: 'rgba(242, 73, 92, 0.9)'
+              - value: 8
+                color: 'rgba(255, 152, 48, 0.96)'
+              - value: 22
+                color: 'rgba(250, 222, 42, 0.9)'
+              - value: 45
+                color: 'rgba(255, 248, 153, 0.9'
+              - value: 75
+                color: 'rgba(168, 240, 216, 0.9)'
+              - value: 92
+                color: 'rgba(32, 182, 132, 0.9)'
+            unit: ' '
+            decimals: 1
+            min_bound_range: 30
+            hours_to_show: 24
+            points_per_hour: 1
+            hour24: true
+            group: false
+            show:
+              points: hover
+              labels: hover
+              legend: false
+              name_adaptive_color: true
+              icon_adaptive_color: true
+            line_width: 5
+            smoothing: true
+            color_thresholds_transition: hard
+          - type: 'custom:mini-graph-card'
+            name: Speedtest down
+            entities:
+              - entity: sensor.speedtest_download
+            icon: 'mdi:download'
+            color_thresholds:
+              - value: 0
+                color: 'rgba(242, 73, 92, 0.9)'
+              - value: 8
+                color: 'rgba(255, 152, 48, 0.96)'
+              - value: 22
+                color: 'rgba(250, 222, 42, 0.9)'
+              - value: 45
+                color: 'rgba(255, 248, 153, 0.9'
+              - value: 75
+                color: 'rgba(168, 240, 216, 0.9)'
+              - value: 92
+                color: 'rgba(32, 182, 132, 0.9)'
+            unit: ' '
+            min_bound_range: 30
+            hours_to_show: 24
+            points_per_hour: 1
+            decimals: 1
+            hour24: true
+            group: false
+            show:
+              points: hover
+              labels: hover
+              legend: false
+              name_adaptive_color: true
+              icon_adaptive_color: true
+            line_width: 5
+            smoothing: true
+            color_thresholds_transition: hard
+          - type: 'custom:mini-graph-card'
+            name: Sync up (Mbps)
+            entities:
+              - entity: sensor.dsl_sync_upstream
+            icon: 'mdi:upload'
+            color_thresholds:
+              - value: 0
+                color: 'rgba(242, 73, 92, 0.9)'
+              - value: 1
+                color: 'rgba(255, 152, 48, 0.96)'
+              - value: 2
+                color: 'rgba(250, 222, 42, 0.9)'
+              - value: 5
+                color: 'rgba(255, 248, 153, 0.9'
+              - value: 7
+                color: 'rgba(168, 240, 216, 0.9)'
+              - value: 9
+                color: 'rgba(32, 182, 132, 0.9)'
+            unit: ' '
+            decimals: 1
+            min_bound_range: 3
+            hours_to_show: 24
+            points_per_hour: 1
+            hour24: true
+            group: false
+            show:
+              points: hover
+              labels: hover
+              legend: false
+              name_adaptive_color: true
+              icon_adaptive_color: true
+            line_width: 5
+            smoothing: true
+            color_thresholds_transition: hard
+          - type: 'custom:mini-graph-card'
+            name: Speedtest up
+            entities:
+              - entity: sensor.speedtest_upload
+            icon: 'mdi:upload'
+            color_thresholds:
+              - value: 0
+                color: 'rgba(242, 73, 92, 0.9)'
+              - value: 1
+                color: 'rgba(255, 152, 48, 0.96)'
+              - value: 2
+                color: 'rgba(250, 222, 42, 0.9)'
+              - value: 5
+                color: 'rgba(255, 248, 153, 0.9'
+              - value: 7
+                color: 'rgba(168, 240, 216, 0.9)'
+              - value: 9
+                color: 'rgb(32, 182, 132)'
+            unit: ' '
+            decimals: 1
+            min_bound_range: 3
+            hours_to_show: 24
+            points_per_hour: 1
+            hour24: true
+            group: false
+            show:
+              points: hover
+              labels: hover
+              legend: false
+              name_adaptive_color: true
+              icon_adaptive_color: true
+            line_width: 5
+            smoothing: true
+            color_thresholds_transition: hard
+        columns: 2
+        square: false
+      - type: grid
+        cards:
+          - type: 'custom:mini-graph-card'
+            name: Latency (Near)
+            entities:
+              - entity: sensor.net_latency_isp
+                name: ISP
+              - entity: sensor.net_latency_city
+                name: City
+            icon: 'mdi:network'
+            decimals: 1
+            min_bound_range: 5
+            lower_bound: 0
+            hours_to_show: 24
+            points_per_hour: 4
+            hour24: true
+            group: false
+            show:
+              points: hover
+              labels: hover
+              legend: true
+              extrema: true
+              average: true
+              name_adaptive_color: false
+              icon_adaptive_color: false
+            line_width: 6
+            smoothing: false
+            color_thresholds_transition: hard
+          - type: 'custom:mini-graph-card'
+            name: Latency (Far)
+            entities:
+              - entity: sensor.net_latency_abroad
+                name: Abroad
+              - entity: sensor.net_latency_earth
+                name: Earth
+            icon: 'mdi:network'
+            decimals: 1
+            min_bound_range: 10
+            lower_bound: 0
+            hours_to_show: 24
+            points_per_hour: 1
+            hour24: true
+            group: false
+            show:
+              points: hover
+              labels: hover
+              legend: true
+              extrema: true
+              average: true
+              name_adaptive_color: false
+              icon_adaptive_color: false
+            line_width: 6
+            smoothing: true
+            color_thresholds_transition: hard
+        columns: 2
+        square: false
+      - type: 'custom:mini-graph-card'
+        name: Error rate
+        entities:
+          - entity: sensor.dsl_error_rate_crc
+            name: CRC
+          - entity: sensor.dsl_error_rate_fec
+            name: FEC
+        icon: 'mdi:bug'
+        decimals: 1
+        min_bound_range: 5
+        lower_bound: 0
+        hours_to_show: 24
+        points_per_hour: 2
+        hour24: true
+        group: false
+        show:
+          points: hover
+          labels: hover
+          legend: true
+          name_adaptive_color: false
+          icon_adaptive_color: false
+        line_width: 4
+        smoothing: false
+        color_thresholds_transition: hard
+      - type: logbook
+        entities:
+          - sensor.speedport_plus_status
+          - binary_sensor.ping_isp
+          - binary_sensor.ping_abroad
+        hours_to_show: 48
+      - type: grid
+        cards:
+          - type: entity
+            entity: sensor.speedport_plus_status
+            attribute: dsl_snrd
+            name: SNR down
+            unit: dB
+            icon: ' '
+          - type: entity
+            entity: sensor.speedport_plus_status
+            attribute: dsl_snru
+            name: SNR up
+            icon: ' '
+            unit: dB
+          - type: entity
+            entity: sensor.speedport_plus_status
+            attribute: vdsl_atnd
+            name: Attenuation down
+            icon: ' '
+            unit: dB
+          - type: entity
+            entity: sensor.speedport_plus_status
+            attribute: vdsl_atnu
+            name: Attenuation up
+            icon: ' '
+            unit: dB
+        columns: 2
+        square: false
+      - type: vertical-stack
+        cards:
+          - type: history-graph
+            entities:
+              - entity: sensor.speedport_plus_status
+            hours_to_show: 72
+            refresh_interval: 120
+          - filter:
+              include:
+                - key: sensor.speedport_plus_status.dsl_transmission_mode
+                - key: sensor.speedport_plus_status.firm*
+            heading_name: ' '
+            heading_state: ' '
+            type: 'custom:entity-attributes-card'
+      - entities:
+          - entity: sensor.speedport_plus_kib_s_received
+          - entity: sensor.speedport_plus_kib_s_sent
+          - entity: sensor.speedport_plus_packets_s_received
+          - entity: sensor.speedport_plus_packets_s_sent
+        title: Traffic
+        type: entities
