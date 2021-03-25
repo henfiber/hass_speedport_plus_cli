@@ -1,4 +1,4 @@
-Integrate Sercomm Speedport Plus (VDSL2 modem) with Home assistant using the `command_line` sensor platform.
+Integrate Sercomm Speedport Plus and ZTE Speedport Entry 2i (VDSL2 modems) with Home assistant using the `command_line` sensor platform.
 
 ![HASS Speedport plus dashboard - Screenshot](screenshots/hass_speedport-plus_dashboard.png)
 
@@ -15,10 +15,10 @@ Integrate Sercomm Speedport Plus (VDSL2 modem) with Home assistant using the `co
 | dsl_snru | Upstream SNR (dB) |
 | dsl_downstream | Downstream DSL throughput (Kbps) |
 | dsl_upstream | Upstream DSL throughput (Kbps) | 
-| dsl_max_downstream | Max attainable downstream DSL throughput (Kbps) |
-| dsl_max_upstream | Max attainable upstream DSL throughput (Kbps) |
-| uptime | Time since the DSL synchronization |
-| uptime_online | Time since IP connectivity was established (usually 3-10 seconds after sync)
+| dsl_max_downstream | (Speedport Plus only) Max attainable downstream DSL throughput (Kbps) |
+| dsl_max_upstream | (Speedport Plus only) Max attainable upstream DSL throughput (Kbps) |
+| uptime | (Speedport Plus only) Time since the DSL synchronization |
+| uptime_online | (Speedport Plus only) Time since IP connectivity was established (usually 3-10 seconds after sync)
 | dsl_sync_status | "Online" if DSL is synced, "offline" otherwise |
 | dsl_online_status | "Online" if IP connectivity has been established, "offline" otherwise |
 | dsl_transmission_mode | Transmission mode as reported by the modem (e.g. "VDSL2-17A Annex B") |
@@ -28,22 +28,27 @@ Integrate Sercomm Speedport Plus (VDSL2 modem) with Home assistant using the `co
 
 ## Usage within Home Assistant
 
+Choose the appropriate script for your modem:
 
-**1. Download the speedport_plus.py script** 
+- `speedport_plus.py` for Speedport Plus
+- `speedport_entry2i.py` for Speedport Entry 2i
 
-Create a folder named `scripts_cli` under your `/config` Home assistant folder and download there the `speedport_plus.py` script from this repo. 
+**1. Download the python scripts** 
+
+Create a folder named `scripts_cli` under your `/config` Home assistant folder and download there the `speedport_plus.py` or `speedport_entry2i.py` script from this repo. 
 If you are new to Home assistant, consider the following ways to do that:  
 
 - If you have installed the "Samba share" addon, you may download the script first in your computer and then create the folder and copy-paste the file by accessing the "/config" share.
 - If you have installed the "Terminal & SSH addon", you may `mkdir config/scripts_cli && cd config/scripts_cli` and download the script using `wget` and the **raw** github path to the script. You may also use `git` and clone this repo there.
-- If you have installed the "File editor" addon, you may manually create the folder from the menu (top left folder icon) and then create a new file, name it `speedport_plus.py` and copy-paste the contents from this repo.
+- If you have installed the "File editor" addon, you may manually create the folder from the menu (top left folder icon) and then create a new file, name it `speedport_plus.py` / `speedport_entry2i.py` and copy-paste the contents from this repo.
 
 All 3 addons are recommended for productive use and management of Home assistant, so you may try any of the suggestions above.
 
 
 **2. Configure the new sensor in configuration.yaml**
 
-After you have successfully added the script under `scripts_cli/speedport_plus.py`, you may edit `configuration.yaml` and create a sensor of platform: [command_line](https://www.home-assistant.io/integrations/sensor.command_line/):
+After you have successfully added the script under `scripts_cli/speedport_plus.py` (`scripts_cli/speedport_entry2i.py` for the Entry 2i), you may 
+edit `configuration.yaml` and create a sensor of platform: [command_line](https://www.home-assistant.io/integrations/sensor.command_line/):
 
 ```yaml
 sensor:
@@ -70,6 +75,9 @@ sensor:
       value_template: '{{ value_json.dsl_link_status }}'
 ```
 
+You may change "name: Speedport Plus status" above with "name: Speedport Entry2i status" if you have the Entry 2i modem. Just be aware that the dashboards 
+shared in this repo have been created with "Speedport Plus" therefore you will have to search/replace entity names to make them work.
+
 
 **Configure the router IP**
 
@@ -80,6 +88,11 @@ If the IP of your router is not `192.168.1.1` or if you want to use a hostname, 
       command: 'python3 /config/scripts_cli/speedport_plus.py "http://10.0.50.1"'
 ```
 
+for the Entry2i:
+
+```yaml
+      command: 'python3 /config/scripts_cli/speedport_entry2i.py "http://10.0.50.1"'
+```
 
 **Polling interval**
 
@@ -106,7 +119,8 @@ can do this by changing the `value_template` field as:
 
 Restart Home assistant and the new sensor will be available as the entity "speedport_plus_status". You may add the new sensor to your dashboards or create automations.
 
-The new sensor entity `speedport_plus_status` will have the values "online" or "offline". The DSL line metrics (attenuation, snr, sync speed etc.) will be available as attributes of this entity. 
+The new sensor entity `speedport_plus_status` (or `speedport_entry2i_status`) will have the values "online" or "offline". The DSL line metrics 
+(attenuation, snr, sync speed etc.) will be available as attributes of this entity. 
 
 ![HASS Speedport plus status - Screenshot](screenshots/hass_speedport_plus_status-and-attributes.png)
 
@@ -143,6 +157,8 @@ sensor:
                   {{state_attr("sensor.speedport_plus_status", "dsl_fec_errors") }}
 ```
 
+(Change `sensor.speedport_plus_status` to `sensor.speedport_entry2i_status` in the above snippet if you have the Entry 2i and have chosen this name)
+
 You may also want to compute error rates which are more useful than totals for detecting spikes during the day. We can use the 
 Home assistant [derivative](https://www.home-assistant.io/integrations/derivative/) platform to accomplish that. 
 
@@ -172,13 +188,12 @@ sensor:
 
 ![Speedport plus Grafana Dashboard - Screenshot](screenshots/hass_grafana_speedport-plus_dashboard.png)
 
+InfluxDB and Grafana are available as Home assistant (community) addons. Check the Add-on Store under the Supervisor section.
+
 If you have integrated Home assistant with [InfluxDB](https://www.home-assistant.io/integrations/influxdb/), the
 attributes (DSL speed, snr, attenuation etc.) will be also available as seperate "fields" in the default "state" measurement.
 
-InfluxDB and Grafana are available as Home assistant (community) addons. Check the Add-on Store under the Supervisor section.
-
 The dashboard displayed here is available in this repo under the `Grafana` folder. You may import it into your Grafana instance choosing your InfluxDB data source.
-
 
 **Sample queries**
 
@@ -220,6 +235,17 @@ You may compute rates (e.g. errors per minute) instead of totals using InfluxDB 
 Or just use the Home assistant [derivative](https://www.home-assistant.io/integrations/derivative/) platform as described in the previous section.
 
 
+## Import the included Grafana dashboard
+
+The dashboard displayed here is available in this repo under the `Grafana` folder. When you import it in your Grafana instance you will be asked to choose your InfluxDB data source.
+
+Notes:
+
+- The dashboard has been created for the Speedport Plus modem. If you use an Entry 2i and you have renamed the name of the sensor as "Speedport Entry2i status" 
+you'll have to search and replace in the `json` dashboard file all instances of `speedport_plus_status` to `speedport_entry2i_status`.
+- If you haven't set `default_measurement: state` as mentioned in the previous section, you'll have to search and replace in the `json` dashboard file all instances of `"measurement": "state"` to `"measurement": "sensor.speedport_plus_status"` (or `sensor.speedport_entry2i_status`).
+
+
 
 ## Related helpful integrations
 
@@ -227,7 +253,7 @@ Or just use the Home assistant [derivative](https://www.home-assistant.io/integr
 **[UPnP/Internet Gateway Device (IGD)](https://www.home-assistant.io/integrations/upnp/)**
 
 If you have UPnP enabled on your router, Home assistant will detect it and offer to add the integration (or you may check manually from the integrations page).
-This will output traffic statistics from your home network. It's not very consistent with this modem but when it works it may provide an indication of (some of) your traffic.
+This will output traffic statistics from your home network. It's not very consistent with Speedport Plus but when it works it may provide an indication of (part of) your traffic.
 
 
 **[Ping (ICMP) Binary sensor](https://www.home-assistant.io/integrations/ping/)**
@@ -236,16 +262,29 @@ The ping integration is usually used for presence detection. But you may also us
 
 ```yaml
 binary_sensor:
+  # Ping an IP of your ISP
   - platform: ping
     host: hostname-or-ip-address-to-ping
-    name: "ISP Ping"
+    name: "Ping ISP"
     count: 3
     scan_interval: 3600
+  # Ping an IP in your city
+  - platform: ping
+    host: hostname-or-ip-address-to-ping
+    name: "Ping City"
+    count: 3
+    scan_interval: 3600
+  # Ping an IP abroad
+  - platform: ping
+    host: hostname-or-ip-address-to-ping
+    name: "Ping Abroad"
+    count: 3
+    scan_interval: 3600 
 ```
 
-The above example will ping "hostname-or-ip-address-to-ping" 3 times every 1 hour (3600 seconds).
+The examples above will make HASS ping 3 different IP addresses (3 times every 1 hour) and measure the latency.
 
-The sensor exposes the different round trip times values measured by ping as attributes: round trip time mdev, round trip time avg, round trip time min, round trip time max.
+The binary sensor (connected/not connected) exposes the different round trip times values measured by ping as attributes: round trip time mdev, round trip time avg, round trip time min, round trip time max.
 
 
 **[Speedtest.net](https://www.home-assistant.io/integrations/speedtestdotnet/) Integration**
@@ -264,7 +303,6 @@ Your true latency may be 7-10ms lower than what is reported from this tool. Read
 The ping integration mentioned previously is more accurate for measuring latency.
 
 Alternatively you may use the [Iperf3](https://www.home-assistant.io/integrations/iperf3/) or the [Fast.com](https://www.home-assistant.io/integrations/fastdotcom/) integrations.
-
 
 
 
