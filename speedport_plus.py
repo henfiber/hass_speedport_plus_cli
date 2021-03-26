@@ -71,12 +71,22 @@ speedport_status_json_full_url = speedport_plus_base_url + "/data/Status.json"
 # Retrieve the status json data from the router url
 req = urllib.request.Request(speedport_status_json_full_url)
 req.add_header('Accept-Language', 'en')
-with urllib.request.urlopen(req) as f:
+
+try:
+    f = urllib.request.urlopen(req)
     try:
         data = json.loads(f.read().decode('utf-8'))
-    except ValueError:
+    except ValueError as e2:
+        print(e2, file=sys.stderr)
         print('{"dsl_link_status": "offline"}')        
-        exit(3)
+        exit(2)
+except URLError as e:
+    print(e, file=sys.stderr)
+    print('{"dsl_link_status": "offline"}')
+    exit(3)
+finally:
+    f.close()
+
 
 
 # keep these variables
@@ -132,6 +142,8 @@ if js.get('datetime'):
 
 # Parse strings to numbers
 def try_num(s):
+    if isinstance(s, (int, float)):
+        return s    
     try:
         s = int(s)
     except ValueError:
@@ -143,6 +155,7 @@ def try_num(s):
     return s
 
 js = {varid:try_num(varvalue) for (varid, varvalue) in js.items()}
+
 
 # Output the final json
 print(json.dumps(js))
