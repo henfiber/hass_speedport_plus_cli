@@ -56,6 +56,7 @@
 import json
 from datetime import datetime
 import urllib.request
+from urllib.error import HTTPError, URLError
 import sys
 
 # Default base url
@@ -78,14 +79,14 @@ try:
         data = json.loads(f.read().decode('utf-8'))
     except ValueError as e2:
         print(e2, file=sys.stderr)
-        print('{"dsl_link_status": "offline"}')        
+        print('{"dsl_link_status": "unsupported"}')        
         exit(2)
+    finally:
+        f.close()
 except URLError as e:
     print(e, file=sys.stderr)
-    print('{"dsl_link_status": "offline"}')
+    print('{"dsl_link_status": "unavailable"}')
     exit(3)
-finally:
-    f.close()
 
 
 
