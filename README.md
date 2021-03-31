@@ -107,20 +107,20 @@ and don't care to catch short term spikes, you may want to increase it to 300 se
 **DSL status Vs Internet status**
 
 The configuration suggested above will use the DSL synchronization status as the "online/offline" status of the sensor. You may 
-want to change it to indicate full IP connectivity instead (i.e. you have an active PPPoE session). You
+want to change it to indicate full IP connectivity instead (i.e. you have an active PPPoE session and an assigned IP address). You
 can do this by changing the `value_template` field as:
 
 ```yaml
       value_template: '{{ value_json.dsl_online_status }}'
 ```
 
-(`dsl_link_status` was changed to `dsl_online_status`)
+(i.e. `dsl_link_status` replaced by `dsl_online_status`)
 
 
 
 **3. Restart Home assistant and then create widgets or automations**
 
-Restart Home assistant and the new sensor will be available as the entity "speedport_plus_status". You may add the new sensor to your dashboards or create automations.
+Restart Home assistant and the new sensor will be available as the entity `speedport_plus_status`. You may add the new sensor to your dashboards or create automations.
 
 The new sensor entity `speedport_plus_status` (or `speedport_entry2i_status`) will have the values "online" or "offline". The DSL line metrics 
 (attenuation, snr, sync speed etc.) will be available as attributes of this entity. 
@@ -129,7 +129,7 @@ The new sensor entity `speedport_plus_status` (or `speedport_entry2i_status`) wi
 
 You may use the sensor status (online/offline) in automations (for instance, restart your router with a smart plug when disconnected). You may also use the numeric attributes using trigger `numeric_state` and selecting an attribute from the list.
 
-Monitoring your Internet connection long term may be more practical with a tool such as Grafana. A sample dashboard is included in this repo. Read the following section for more.
+Monitoring your Internet connection long term may be more practical with a tool such as Grafana. A sample dashboard is included in this repo. Read the following sections for more.
 
 
 ## Attributes as individual sensors
@@ -261,7 +261,7 @@ The lovelace dashboard depends on the following custom cards (available in Hacs)
 It also includes widgets that depend on the extra integrations listed in the following section (UPnP, Ping binary sensor for latency, Speedtest.net). 
 Of course, if you don't want to use these extra integrations or if you want to use only builtin cards you may adapt the dashboard to your needs.
 
-Finally, you will have to replace the dummy values with real user IDs under the `visible:` key. You may do that in the tab optios in edit mode using the UI 
+Finally, you will have to replace the dummy values with real user IDs under the `visible:` key. You may do that in the tab options in edit mode using the UI 
 or you may copy-paste your user IDs from another dashboard yaml configuration.
 
 
