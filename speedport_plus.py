@@ -74,7 +74,16 @@ req = urllib.request.Request(speedport_status_json_full_url)
 req.add_header('Accept-Language', 'en')
 
 try:
-    f = urllib.request.urlopen(req)
+    # urlopen for either http or https
+    if speedport_plus_base_url.startswith("https"):
+        import ssl
+        ctx = ssl.create_default_context()
+        ctx.check_hostname = False
+        ctx.verify_mode = ssl.CERT_NONE
+        f = urllib.request.urlopen(req, context=ctx)
+    else:
+        f = urllib.request.urlopen(req)
+        
     try:
         data = json.loads(f.read().decode('utf-8'))
     except ValueError as e2:

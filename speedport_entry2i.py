@@ -80,14 +80,24 @@ req = urllib.request.Request(speedport_full_url)
 req.add_header('Accept-Language', 'en')
 
 try:
-    f = urllib.request.urlopen(req)
+    # urlopen for either http or https
+    if speedport_base_url.startswith("https"):
+        import ssl
+        ctx = ssl.create_default_context()
+        ctx.check_hostname = False
+        ctx.verify_mode = ssl.CERT_NONE
+        f = urllib.request.urlopen(req, context=ctx)
+    else:
+        f = urllib.request.urlopen(req)    
+    
     xml_data = f.read().decode('utf-8')
+    
+    f.close()
 except URLError as e:
     print(e, file=sys.stderr)
-    print('{"dsl_link_status": "offline"}')
+    print('{"dsl_link_status": "unavailable"}')
     exit(3)
-finally:
-    f.close()
+    
 
 
 # the dictionary which will store the final results (will output as json)
@@ -120,11 +130,13 @@ try:
     root = ET.fromstring(xml_data)
 except ParseError as e:
     print(e, file=sys.stderr)
+    print('{"dsl_link_status": "unsupported"}')
     exit(4) 
 
 # Check if the XML root element is what we expect
 if root.tag != "ajax_response_xml_root":
     print("Unexpeced XML format", file=sys.stderr)
+    print('{"dsl_link_status": "unsupported"}')
     exit(5)
 
 
