@@ -241,12 +241,12 @@ Or just use the Home assistant [derivative](https://www.home-assistant.io/integr
 
 ## Import the included Grafana dashboard
 
-The dashboard displayed here is available in this repo under the `Grafana` folder. When you import it in your Grafana instance you will be asked to choose your InfluxDB data source.
+The dashboard displayed above is available in this repo under the `grafana` folder. When you import it into your Grafana instance you will be asked to choose your InfluxDB data source.
 
 Notes:
 
-- The dashboard has been created for the Speedport Plus modem. If you use an Entry 2i modem and you have renamed the name of the sensor as "Speedport Entry2i status" 
-you'll have to search and replace in the `json` dashboard file all instances of `speedport_plus_status` to `speedport_entry2i_status`.
+- The dashboard has been created for the Speedport Plus modem. If you have an Entry 2i modem and you have renamed the name of the sensor as "Speedport Entry2i status" 
+you'll have to search and replace within the `json` dashboard file all instances of `speedport_plus_status` to `speedport_entry2i_status`.
 - If you haven't set `default_measurement: state` in the InfluxDB integration as mentioned in the previous section, 
 you'll have to search and replace within the `json` dashboard file all instances of `"measurement": "state"` to `"measurement": "sensor.speedport_plus_status"` (or `sensor.speedport_entry2i_status`).
 
