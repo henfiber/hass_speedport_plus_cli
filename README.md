@@ -282,27 +282,51 @@ The ping integration is usually used for presence detection. But you may also us
 binary_sensor:
   # Ping an IP of your ISP
   - platform: ping
-    host: hostname-or-ip-address-to-ping
+    host: hostname-or-ip-of-your-isp-to-ping
     name: "Ping ISP"
     count: 3
     scan_interval: 3600
   # Ping an IP in your city
   - platform: ping
-    host: hostname-or-ip-address-to-ping
+    host: hostname-or-ip-of-other-isp-to-ping
     name: "Ping City"
     count: 3
     scan_interval: 3600
   # Ping an IP abroad
   - platform: ping
-    host: hostname-or-ip-address-to-ping
+    host: hostname-or-ip-from-other-country-to-ping
     name: "Ping Abroad"
     count: 3
     scan_interval: 3600 
 ```
 
-The examples above will make HASS ping 3 different IP addresses (3 times every 1 hour) and measure the latency.
+The examples above will make HA ping 3 different IP addresses (3 times every 1 hour) and measure the latency.
 
-The binary sensor (connected/not connected) exposes the different round trip times values measured by ping as attributes: round trip time mdev, round trip time avg, round trip time min, round trip time max.
+The binary sensor (connected/not connected) exposes the round trip time values measured by ping as attributes: round trip time avg, round trip time min, round trip time max.
+
+If you want to expose the latencies as separate sensors you can use template sensors (required by the shared Lovalace dashboard view shared in this repo):
+
+```yaml
+sensor:
+    - platform: template
+      sensors:
+          net_latency_isp:
+              friendly_name: Internet Latency (ISP)
+              value_template: >-
+                  {{state_attr("binary_sensor.ping_isp", "round_trip_time_avg") | float | round(1) }}
+              unit_of_measurement: "ms"
+          net_latency_city:
+              friendly_name: Internet Latency (City)
+              value_template: >-
+                  {{state_attr("binary_sensor.ping_city", "round_trip_time_avg") | float | round(1) }}
+              unit_of_measurement: "ms"
+          net_latency_abroad:
+              friendly_name: Internet Latency (Abroad)
+              value_template: >-
+                  {{state_attr("binary_sensor.ping_abroad", "round_trip_time_avg") | float | round(1) }}
+              unit_of_measurement: "ms"
+```
+
 
 
 **[Speedtest.net](https://www.home-assistant.io/integrations/speedtestdotnet/) Integration**
