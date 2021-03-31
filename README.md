@@ -194,9 +194,9 @@ sensor:
 InfluxDB and Grafana are available as Home assistant (community) addons. Check the Add-on Store under the Supervisor section.
 
 If you have integrated Home assistant with [InfluxDB](https://www.home-assistant.io/integrations/influxdb/), the
-attributes (DSL speed, snr, attenuation etc.) will be also available as seperate "fields" in the default "state" measurement.
+entity attributes (DSL speed, snr, attenuation etc.) will be also available as seperate "fields" in the InfluxDB "measurement" time-series created for this entity.
 
-The dashboard displayed here is available in this repo under the `Grafana` folder. You may import it into your Grafana instance choosing your InfluxDB data source.
+The dashboard displayed above is available in this repo under the `grafana` folder. You may import it into your Grafana instance while choosing your InfluxDB data source. Read the related section further below for more details.
 
 **Sample queries**
 
@@ -228,7 +228,8 @@ influxdb:
     ...
 ```
 
-If it's not the case, then you should adjust the queries above accordingly.
+If it's not the case, then you should adjust the queries above accordingly 
+(you may need to change `FROM "state"` with `FROM "sensor.speedport_plus_status"` or whatever entity name you have defined).
 
 
 
@@ -244,9 +245,10 @@ The dashboard displayed here is available in this repo under the `Grafana` folde
 
 Notes:
 
-- The dashboard has been created for the Speedport Plus modem. If you use an Entry 2i and you have renamed the name of the sensor as "Speedport Entry2i status" 
+- The dashboard has been created for the Speedport Plus modem. If you use an Entry 2i modem and you have renamed the name of the sensor as "Speedport Entry2i status" 
 you'll have to search and replace in the `json` dashboard file all instances of `speedport_plus_status` to `speedport_entry2i_status`.
-- If you haven't set `default_measurement: state` as mentioned in the previous section, you'll have to search and replace in the `json` dashboard file all instances of `"measurement": "state"` to `"measurement": "sensor.speedport_plus_status"` (or `sensor.speedport_entry2i_status`).
+- If you haven't set `default_measurement: state` in the InfluxDB integration as mentioned in the previous section, 
+you'll have to search and replace within the `json` dashboard file all instances of `"measurement": "state"` to `"measurement": "sensor.speedport_plus_status"` (or `sensor.speedport_entry2i_status`).
 
 
 ## Import the included Lovelace dashboard view
