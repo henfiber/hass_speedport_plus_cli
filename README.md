@@ -44,11 +44,12 @@ If you are new to Home assistant, consider the following ways to do that:
 
 All 3 addons are recommended for productive use and management of Home assistant, so you may try any of the suggestions above.
 
+Note: If you are just using Home assistant core installed in a server, then you have to adapt your path to `/path/to/homeassistant/config/scripts_cli`
 
 **2. Configure the new sensor in configuration.yaml**
 
-After you have successfully added the script under `scripts_cli/speedport_plus.py` (`scripts_cli/speedport_entry2i.py` for the Entry 2i), you may 
-edit `configuration.yaml` and create a sensor of platform: [command_line](https://www.home-assistant.io/integrations/sensor.command_line/):
+After you have successfully added the script under `config/scripts_cli/speedport_plus.py` (`config/scripts_cli/speedport_entry2i.py` for the Entry 2i), you may 
+edit `configuration.yaml` and create a [command_line](https://www.home-assistant.io/integrations/sensor.command_line/) sensor:
 
 ```yaml
 sensor:
@@ -75,8 +76,10 @@ sensor:
       value_template: '{{ value_json.dsl_link_status }}'
 ```
 
-You may change "name: Speedport Plus status" above with "name: Speedport Entry2i status" if you have the Entry 2i modem. Just be aware that the dashboards 
-shared in this repo have been created with "Speedport Plus" therefore you will have to search/replace entity names to make them work.
+Change `speedport_plus.py` with `speedport_entry2i.py` above if you have this modem. Also change the path to `/path/to/homeassistant/config/scripts_cli/` if you just use Home assistant core installed in a custom server location.
+
+You may change the `name: Speedport Plus status` above with `name: Speedport Entry2i status` (or whatever you desire) if you have the Entry 2i modem. Just be aware that the dashboards 
+shared in this repo have been created with this specific entity name (`sensor.speedport_plus_status`) therefore you will have to search/replace entity names to make them work.
 
 
 **Configure the router IP**
@@ -245,6 +248,19 @@ Notes:
 you'll have to search and replace in the `json` dashboard file all instances of `speedport_plus_status` to `speedport_entry2i_status`.
 - If you haven't set `default_measurement: state` as mentioned in the previous section, you'll have to search and replace in the `json` dashboard file all instances of `"measurement": "state"` to `"measurement": "sensor.speedport_plus_status"` (or `sensor.speedport_entry2i_status`).
 
+
+## Import the included Lovelace dashboard view
+
+A lovelace view (tab in a dashboard) has been shared in this repo under the `lovelace_dashboard_views` folder. 
+You have to place it within an existing dashboard (under the `views:` key) using the Raw configuration editor (or by editing the yaml file if you use yaml mode).
+
+The lovelace dashboard depends on the following custom cards (available in Hacs): layout card, mini graph card, entity attributes card.
+
+It also includes widgets that depend on the extra integrations listed in the following section (UPnP, Ping binary sensor for latency, Speedtest.net). 
+Of course, if you don't want to use these extra integrations or if you want to use only builtin cards you may adapt the dashboard to your needs.
+
+Finally, you will have to replace the dummy values with real user IDs under the `visible:` key. You may do that in the tab optios in edit mode using the UI 
+or you may copy-paste your user IDs from another dashboard yaml configuration.
 
 
 ## Related helpful integrations
