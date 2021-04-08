@@ -153,11 +153,11 @@ sensor:
           dsl_errors_crc:
               friendly_name: DSL CRC Errors
               value_template: >-
-                  {{state_attr("sensor.speedport_plus_status", "dsl_crc_errors") }}
+                  {{state_attr("sensor.speedport_plus_status", "dsl_crc_errors") | int }}
           dsl_errors_fec:
               friendly_name: DSL FEC Errors
               value_template: >-
-                  {{state_attr("sensor.speedport_plus_status", "dsl_fec_errors") }}
+                  {{state_attr("sensor.speedport_plus_status", "dsl_fec_errors") | int }}
 ```
 
 (Change `sensor.speedport_plus_status` to `sensor.speedport_entry2i_status` in the above snippet if you have the Entry 2i and have chosen this name)
@@ -336,7 +336,7 @@ This way you can compare your DSL sync speed with your actual speed.
 
 Configure the integration from the UI per the instructions in the linked page above. 
 
-- It is advised to not run the test very frequently because it will clog your connection on unpredictable times. I have changed the default to 360 minutes (6 hours).
+- It is advised to not run the test very frequently because it will clog your connection on unpredictable times (I have changed mine to 360 minutes - 6 hours).
 - It is suggested to set a specific server close to you (see the dropdown in the "Options" menu) so you have consistent results to compare long term.
 
 Note that a Raspberry PI (other than 4B or newer) may limit the reported maximum speed to 100Mbps or 300Mbps (Raspberry PI 3+) due to the slower LAN adapter. 
@@ -350,9 +350,15 @@ Alternatively you may use the [Iperf3](https://www.home-assistant.io/integration
 
 ## Troubleshooting
 
+### Test modem admin page access
+
+Make sure that the admin page of your modem (http://192.168.1.1 by default) is accessible from the Home assistant host. 
+If you have `ssh` enabled, you may login to Home assistant and ping the IP from the command line.
+
+
 ### Test from the command-line
 
-You may test the script from your PC (if you have python3 installed).
+You may test the Python script from your PC (if you have python3 installed).
 
 Run without arguments to retrieve data from the default IP address (http://192.168.1.1):
 
