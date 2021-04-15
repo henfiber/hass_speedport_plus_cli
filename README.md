@@ -353,7 +353,7 @@ Alternatively you may use the [Iperf3](https://www.home-assistant.io/integration
 ### Test modem admin page access
 
 Make sure that the admin page of your modem (http://192.168.1.1 by default) is accessible from the Home assistant host. 
-If you have `ssh` enabled, you may login to Home assistant and ping the IP from the command line.
+If you have `ssh` enabled, you may use it to ping the IP from the command line.
 
 
 ### Test from the command-line
@@ -387,11 +387,33 @@ The expected response should be similar to:
 {"firmware_version": "09022001.00.031_OTE1", "dsl_link_status": "online", "dsl_downstream": 104254, "dsl_upstream": 10996, "dsl_max_downstream": 80692, "dsl_max_upstream": 48300, "dsl_transmission_mode": "...", "dsl_crc_errors": 10825, "dsl_fec_errors": 21, "vdsl_atnu": 10.0, "vdsl_atnd": 6.5, "dsl_snrd": 10.6, "dsl_snru": 31.0, "uptime_online": 285555, "dsl_online_status": "online", "uptime": 285562}
 ```
 
+### Increase logging verbosity
+
+You may increase the verbosity of the logs for the `command_line` platform by adding the `logger:` platform at `configuration.yaml`:
+
+```yaml
+logger:
+  default: warning
+  logs:
+    homeassistant.components.command_line: debug
+```
+
+If the configuration works properly you should see entries like the following in the logs:
+
+```
+2021-04-15 23:30:54 DEBUG (SyncWorker_16) [homeassistant.components.command_line.sensor] Running command: python3 /config/scripts_cli/speedport_plus.py "http://192.168.1.1"
+....
+2021-04-15 23:31:54 DEBUG (SyncWorker_9) [homeassistant.components.command_line.sensor] Running command: python3 /config/scripts_cli/speedport_plus.py "http://192.168.1.1"
+```
+
+If there are any warnings it may help tracking down the cause. When you finish debugging, you may revert the debug logging level to reduce the messages in the logs.
+
+
 ### Firmware versions tested
 
 The python scripts have been tested with the following firmware versions:
 
-- Speedport Plus: `09022001.00.031_OTE1`, `09022001.00.030_OTE5`
+- Speedport Plus: `09022001.00.031_OTE2`, `09022001.00.031_OTE1`, `09022001.00.030_OTE5`
 - Speedport Entry 2i: `V1.0.0_OTET14MAPEA`
 
 If the integration does not work and the command line testing fails or produces different results than suggested above, check whether the device has a new firmware and please open an issue.
